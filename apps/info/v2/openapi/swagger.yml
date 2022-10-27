@@ -1,0 +1,33 @@
+swagger: "2.0"
+info:
+  description: Swagger file for INFO application API
+  version: "1.0.0"
+  title: Info API
+consumes:
+  - application/json
+produces:
+  - text/plain
+
+basePath: /
+
+paths:
+  /:
+    get:
+      operationId: aws_info.metadata_info.get_info
+      tags:
+        - EC2
+      summary: Gets ec2 instance information
+      description: Gets ec2 instance information
+      responses:
+        200:
+          description: Successfully read aws info from ec2 metadata
+          schema:
+            type: object
+            items:
+              properties:
+                region:
+                  type: string
+                availability_zone:
+                  type: string
+                private_ipv4:
+                  type: string

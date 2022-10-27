@@ -1,0 +1,11 @@
+Flask~=2.0.1
+connexion~=2.7.0
+connexion[swagger-ui]
+swagger-ui-bundle
+boto3
+pyyaml
+sqlalchemy
+pymysql
+requests
+ec2_metadata
+watchtower

@@ -1,0 +1,5 @@
+Flask~=2.0.1
+connexion~=2.7.0
+connexion[swagger-ui]
+swagger-ui-bundle
+ec2_metadata

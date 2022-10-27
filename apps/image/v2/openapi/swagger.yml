@@ -1,0 +1,187 @@
+swagger: "2.0"
+info:
+  description: Swagger file for Image Service API
+  version: "1.0.0"
+  title: Image Service API
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /api
+
+paths:
+  /notification:
+    get:
+      operationId: notification_service.list_subscriptions
+      tags:
+        - Notification
+      summary: List email subscriptions to SNS topic
+      description: List email subscriptions to SNS topic
+      responses:
+        200:
+          description: Successfully retrieves subscriptions
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                SubscriptionArn:
+                  type: string
+                Owner:
+                  type: string
+                Protocol:
+                  type: string
+                Endpoint:
+                  type: string
+                TopicArn:
+                  type: string
+  /notification/{email_address}:
+    post:
+      operationId: notification_service.subscribe
+      tags:
+        - Notification
+      summary: Subscribes email to SNS topic
+      description: Subscribes email to SNS topic
+      parameters:
+        - name: email_address
+          in: path
+          type: string
+          description: Email address for subscription
+          required: true
+      responses:
+        200:
+          description: Successfully subscribed email to SNS Topic
+        400:
+          description: Invalid email address provided
+    delete:
+      operationId: notification_service.unsubscribe
+      tags:
+        - Notification
+      summary: Unsubscribes email to SNS topic
+      description: Unsubscribes email to SNS topic
+      parameters:
+        - name: email_address
+          in: path
+          type: string
+          description: Email address for subscription
+          required: true
+      responses:
+        200:
+          description: Successfully unsubscribed email to SNS Topic
+        404:
+          description: Subscribtion is not found
+        412:
+          description: Cannot unsubscribe, confirmation is still pending
+
+  /image/file/{image_id}:
+    get:
+      operationId: image_service.download_image
+      tags:
+        - Image
+      summary: Downloads image file by object id
+      description: Gets image file by object id
+      parameters:
+        - name: image_id
+          in: path
+          description: Image ID
+          type: integer
+          required: true
+      produces:
+        - image/*
+      responses:
+        200:
+          description: Successfully downloads image file from database by id
+        404:
+          description: Image is not found
+  /image/{image_id}:
+    get:
+      operationId: image_service.get_image_info
+      tags:
+        - Image
+      summary: Gets image metadata by object id
+      description: Gets image metadata by object id
+      parameters:
+        - name: image_id
+          in: path
+          description: Image ID
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Successfully reads image metadata from database by id
+          schema:
+            type: object
+            properties:
+              object_key:
+                type: string
+              object_type:
+                type: string
+              last_modified:
+                type: string
+              object_size:
+                type: integer
+        404:
+          description: Image is not found
+    delete:
+      operationId: image_service.delete_image
+      tags:
+        - Image
+      summary: Deletes image by key
+      description: Delete image by key
+      parameters:
+        - name: image_id
+          in: path
+          description: Image ID
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Successfully deleted image
+        404:
+          description: Image is not found
+  /image:
+    get:
+      operationId: image_service.get_all_images_info
+      tags:
+        - Image
+      summary: Gets all images metadata
+      description: Gets all images metadata
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully reads images metadata from database
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                object_key:
+                  type: string
+                object_type:
+                  type: string
+                last_modified:
+                  type: string
+                object_size:
+                  type: integer
+    post:
+      operationId: image_service.upload_image
+      tags:
+        - Image
+      summary: Uploads image to s3 bucket
+      description: Uploads image to s3 bucket
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: upfile
+          type: file
+          description: The file to upload.
+      responses:
+        200:
+          description: Successfully uploaded image
+        400:
+          description: Data sent is incorrect or missing

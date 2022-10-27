@@ -1,0 +1,4 @@
+# Keypair name, created in advance in AWS Console and
+# downloaded to ~/.aws/pems. The name of the downloaded
+# key must be set here, without .pem/.psx extension
+key: cloudx
